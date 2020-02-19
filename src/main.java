@@ -18,6 +18,27 @@ public class main {
 
         String[] size = new String[mapa.length()];
 
+        int cont = 0;
+        int horizontal2 = 0;
+        int vertical2 = 1;
+
+        for (int i = 0; i < mapa.length(); i++) {
+
+            if (mapa.charAt(i) == '\n'){
+                vertical2++;
+
+                if(horizontal2 <= cont){
+                    horizontal2 = cont;
+                    cont = 0;
+                    continue;
+                }
+            }
+            cont++;
+        }
+
+        out.println(horizontal2);
+        out.println(vertical2);
+
 
         Bender b = new Bender(mapa);
 
