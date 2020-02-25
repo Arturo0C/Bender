@@ -34,37 +34,42 @@ public class main {
                     cont = 0;
                     continue;
                 }
+                cont = 0;
             }
             cont++;
         }
 
-        out.println(vertical);
-        out.println(horizontal);
-        out.println(mapa.length());
 
-        Character[][] mapa2d = new Character[vertical][horizontal];
+
+        char[][] mapa2d = new char[vertical][horizontal];
         Integer[] posicionPersonaje = new Integer[2];
 
-        /*
+
         // Variable para contar el caracter de mapa
-        int k = 0; //no pude superar el tamaño de el mapa
+        int nujLletra = 0; //no pude superar el tamaño de el mapa
         //v
-        for (int i = 0; i < mapa2d.length; i++) {
+        for (int i = 0; i < vertical; i++) {
             //h
-            for (int j = 0; j < mapa2d[0].length; j++) {
-                mapa2d[i][j] = mapa.charAt(k);
-                k++;
+            for (int j = 0; j < horizontal + 1; j++,nujLletra++) {
+                if (mapa.length() == nujLletra) {break;}
+                if (mapa.charAt(nujLletra) == '\n' && j!= 0) { nujLletra++; break;}
+
+                mapa2d[i][j] = mapa.charAt(nujLletra);
+
                 // Capturamos el personaje
-                if (mapa.charAt(k) == 'X' || mapa.charAt(k) == 'x') {
+                if (mapa.charAt(nujLletra) == 'X' || mapa.charAt(nujLletra) == 'x') {
                     posicionPersonaje[0] = j;
                     posicionPersonaje[1] = i;
                 }
+
             }
-        }*/
+            if (mapa.length() == nujLletra) {break;}
+        }
 
         for (int i = 0; i < mapa2d.length; i++) {
             for (int j = 0; j < mapa2d[0].length; j++) {
                 out.print(mapa2d[i][j]);
+
             }
             out.println();
         }

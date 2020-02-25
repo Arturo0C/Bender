@@ -27,7 +27,7 @@ class Bender {
         for (int i = 0; i < mapa2d.length; i++) {
             //h
             for (int j = 0; j < mapa2d[0].length; j++) {
-                if (mapa.charAt(k) == '\n') {k++;}
+                if (mapa.charAt(k) == '\n') {k++; break;}
                 mapa2d[i][j] = mapa.charAt(k);
 
                 // Capturamos el personaje
