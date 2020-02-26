@@ -2,7 +2,7 @@ class Bender {
     // Constructor: ens passen el mapa en forma d'String
 
     char[][] mapa2d;
-    CharX c = new CharX();
+    Robot robot = new Robot();
 
     //Posicion de X
 
@@ -11,8 +11,6 @@ class Bender {
         int cont = 0;
         int horizontal = 0;
         int vertical = 1;
-
-
 
         for (int i = 0; i < mapa.length(); i++) {
 
@@ -47,8 +45,8 @@ class Bender {
 
                 // Capturamos el personaje
                 if (mapa.charAt(numLletra) == 'X' || mapa.charAt(numLletra) == 'x') {
-                    c.setVertical(i);
-                    c.setHorizontal(j);
+                    robot.setVertical(i);
+                    robot.setHorizontal(j);
                 }
 
             }
@@ -67,11 +65,12 @@ class Bender {
     // segons la posició del robot a cada moment.
 
     public String run() {
-        return c.getMovimientos(mapa2d);
+        return robot.getMovimientos(mapa2d);
     }
 }
 
-class CharX  {
+// S E N O
+class Robot {
     private int vertical;
     private int horizontal;
 
@@ -97,8 +96,17 @@ class CharX  {
         // els valors «S», «N», «W» o «E»
         while (mapa2d[v][h] != '$') {
             if (mapa2d[v + 1][h] == ' ' || mapa2d[v + 1][h] == '$'){
-                movimientos.insert(0,"S");
+                movimientos.append("S");
                 v++;
+            } else if (mapa2d[v][h+1] == ' ' || mapa2d[v][h+1] == '$'){
+                movimientos.append("E");
+                v++;
+            } else if (mapa2d[v-1][h] == ' ' || mapa2d[v-1][h] == '$'){
+                movimientos.append("N");
+                v--;
+            } else if (mapa2d[v][h-1] == ' ' || mapa2d[v][h-1] == '$'){
+                movimientos.append("S");
+                h--;
             }
         }
 
