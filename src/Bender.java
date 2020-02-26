@@ -1,54 +1,63 @@
 class Bender {
     // Constructor: ens passen el mapa en forma d'String
 
-    //Crea el string que el valor es igual a un salto de linea
+    char[][] mapa2d;
+    CharX c = new CharX();
 
-
-
-    Character[][] mapa2d;
-    Integer[] posicionPersonaje = new Integer[2];
+    //Posicion de X
 
     public Bender(String mapa) {
-        // Posicion del personaje
-
+       //longitud del mapa
+        int cont = 0;
         int horizontal = 0;
-        int vertical = 0;
+        int vertical = 1;
+
+
 
         for (int i = 0; i < mapa.length(); i++) {
-            if (horizontal == 0) {vertical ++;}
-            if (mapa.charAt(i) == '\n') {horizontal++;}
+
+            if (mapa.charAt(i) == '\n') {
+                vertical++;
+
+                if (horizontal <= cont) {
+                    horizontal = cont;
+                    cont = 0;
+                    continue;
+                }
+                cont = 0;
+            }
+            cont++;
         }
 
-        this.mapa2d = new Character[vertical][horizontal];
+        this.mapa2d = new char[vertical][horizontal];
+
+        // Guardamos las cordenadas de X
+        Integer[] posicionPersonaje = new Integer[2];
 
         // Variable para contar el caracter de mapa
-        int k = 0;
+        int numLletra = 0; //no pude superar el tamaño de el mapa
         //v
-        for (int i = 0; i < mapa2d.length; i++) {
+        for (int i = 0; i < vertical; i++) {
             //h
-            for (int j = 0; j < mapa2d[0].length; j++) {
-                if (mapa.charAt(k) == '\n') {k++; break;}
-                mapa2d[i][j] = mapa.charAt(k);
+            for (int j = 0; j < horizontal + 1; j++,numLletra++) {
+                if (mapa.length() == numLletra) {break;}
+                if (mapa.charAt(numLletra) == '\n' && j!= 0) { numLletra++; break;}
+
+                mapa2d[i][j] = mapa.charAt(numLletra);
 
                 // Capturamos el personaje
-                if (mapa.charAt(k) == 'X' || mapa.charAt(k) == 'x') {
-                    posicionPersonaje[0] = j;
-                    posicionPersonaje[1] = i;
+                if (mapa.charAt(numLletra) == 'X' || mapa.charAt(numLletra) == 'x') {
+                    c.setVertical(i);
+                    c.setHorizontal(j);
                 }
-                k++;
+
             }
+            if (mapa.length() == numLletra) {break;}
         }
 
-    }
 
-    public Character[][] getMapa2d() {
-        return mapa2d;
-    }
 
-    public Integer[] getPosicionPersonaje() {
-        return posicionPersonaje;
     }
-
 
     // Navegar fins a l'objectiu («$»).
 
@@ -58,16 +67,40 @@ class Bender {
     // segons la posició del robot a cada moment.
 
     public String run() {
-        return ""; }
+        return c.getMovimientos(mapa2d);
+    }
 }
 
-class Personaje {
+class CharX  {
+    private int vertical;
+    private int horizontal;
 
-    Personaje() {
 
+    StringBuilder movimientos = new StringBuilder();
+
+    public String getMovimientos(char[][] mapa2d) {
+        move(vertical,horizontal, mapa2d);
+        return movimientos.toString();
     }
 
-    void moveUp() {
+    public void setVertical(int vertical) {
+        this.vertical = vertical;
+    }
+
+    public void setHorizontal(int horizontal) {
+        this.horizontal = horizontal;
+    }
+
+    void move(int vertical, int horizontal, char[][] mapa2d) {
+        int v = vertical;
+        int h = horizontal;
+        // els valors «S», «N», «W» o «E»
+        while (mapa2d[v][h] != '$') {
+            if (mapa2d[v + 1][h] == ' ' || mapa2d[v + 1][h] == '$'){
+                movimientos.insert(0,"S");
+                v++;
+            }
+        }
 
     }
 }
