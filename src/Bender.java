@@ -12,7 +12,7 @@ class Bender {
     //Posicion de X
 
     public Bender(String mapa) {
-       //longitud del mapa
+        //longitud del mapa
         int cont = 0;
         int horizontal = 0;
         int vertical = 1;
@@ -21,7 +21,6 @@ class Bender {
 
             if (mapa.charAt(i) == '\n') {
                 vertical++;
-
                 if (horizontal <= cont) {
                     horizontal = cont;
                     cont = 0;
@@ -34,17 +33,19 @@ class Bender {
 
         this.mapa2d = new char[vertical][horizontal];
 
-        // Guardamos las cordenadas de X
-        Integer[] posicionPersonaje = new Integer[2];
-
         // Variable para contar el caracter de mapa
         int numLletra = 0; //no pude superar el tamaño de el mapa
         //v
         for (int i = 0; i < vertical; i++) {
             //h
-            for (int j = 0; j < horizontal + 1; j++,numLletra++) {
-                if (mapa.length() == numLletra) {break;}
-                if (mapa.charAt(numLletra) == '\n' && j!= 0) { numLletra++; break;}
+            for (int j = 0; j < horizontal + 1; j++, numLletra++) {
+                if (mapa.length() == numLletra) {
+                    break;
+                }
+                if (mapa.charAt(numLletra) == '\n' && j != 0) {
+                    numLletra++;
+                    break;
+                }
 
                 mapa2d[i][j] = mapa.charAt(numLletra);
 
@@ -55,9 +56,10 @@ class Bender {
                 }
 
             }
-            if (mapa.length() == numLletra) {break;}
+            if (mapa.length() == numLletra) {
+                break;
+            }
         }
-
 
 
     }
@@ -79,11 +81,10 @@ class Robot {
     private int vertical;
     private int horizontal;
 
-
     StringBuilder movimientos = new StringBuilder();
 
     public String getMovimientos(char[][] mapa2d) {
-        move(vertical,horizontal, mapa2d);
+        move(vertical, horizontal, mapa2d);
         return movimientos.toString();
     }
 
@@ -103,31 +104,37 @@ class Robot {
         int aux = 1;
 
         while (mapa2d[v][h] != '$') {
-            switch(aux) {
+            switch (aux) {
                 case 1:
-                    if (mapa2d[v + 1][h] == '#') {aux++; break;}
-                    if (mapa2d[v + 1][h] == ' ' || mapa2d[v + 1][h] == '$'){
+                    if (mapa2d[v + 1][h] == '#') { aux++; break;}
+                    if (mapa2d[v + 1][h] == ' ' || mapa2d[v + 1][h] == '$') {
                         movimientos.append("S");
                         v++;
                     }
                     break;
                 case 2:
-                    if (mapa2d[v][h + 1] == '#') {aux++; break;}
-                    if (mapa2d[v][h+1] == ' ' || mapa2d[v][h+1] == '$'){
+                    if (mapa2d[v][h + 1] == '#') {aux++;break;}
+                    if (mapa2d[v][h + 1] == ' ' || mapa2d[v][h + 1] == '$') {
                         movimientos.append("E");
                         h++;
                     }
                     break;
                 case 3:
-                    if (mapa2d[v - 1][h] == '#') {aux++; break;}
-                    if (mapa2d[v-1][h] == ' ' || mapa2d[v-1][h] == '$'){
+                    if (mapa2d[v - 1][h] == '#') {
+                        aux++;
+                        break;
+                    }
+                    if (mapa2d[v - 1][h] == ' ' || mapa2d[v - 1][h] == '$') {
                         movimientos.append("N");
                         v--;
                     }
                     break;
                 case 4:
-                    if (mapa2d[v][h - 1] == '#') {aux = 1; break;}
-                    if (mapa2d[v][h-1] == ' ' || mapa2d[v][h-1] == '$'){
+                    if (mapa2d[v][h - 1] == '#') {
+                        aux = 1;
+                        break;
+                    }
+                    if (mapa2d[v][h - 1] == ' ' || mapa2d[v][h - 1] == '$') {
                         movimientos.append("W");
                         h--;
                     }
@@ -135,22 +142,28 @@ class Robot {
             }
         }
 
-        /*while (mapa2d[v][h] != '$') {
-            if (mapa2d[v + 1][h] == ' ' || mapa2d[v + 1][h] == '$'){
-                    movimientos.append("S");
-                    v++;
-            } else if (mapa2d[v][h+1] == ' ' || mapa2d[v][h+1] == '$'){
-                    movimientos.append("E");
-                    h++;
-            } else if (mapa2d[v-1][h] == ' ' || mapa2d[v-1][h] == '$'){
-                    movimientos.append("N");
-                    v--;
-            } else if (mapa2d[v][h-1] == ' ' || mapa2d[v][h-1] == '$'){
-                    movimientos.append("O");
-                    h--;
-            }
-        }*/
+    }
+}
 
+class Teleporter{
+    private int vertical;
+    private int horizontal;
 
+    Teleporter() {}
+
+    public void setVertical(int vertical) {
+        this.vertical = vertical;
+    }
+
+    public int getVertical() {
+        return vertical;
+    }
+
+    public void setHorizontal(int horizontal) {
+        this.horizontal = horizontal;
+    }
+
+    public int getHorizontal() {
+        return horizontal;
     }
 }
