@@ -79,16 +79,17 @@ class Robot {
 
     private int vertical;
     private int horizontal;
-    private Map<Integer, Teleporter> listaTp;
+
+    /*private Map<Integer, Teleporter> listaTp;*/
 
     StringBuilder movimientos = new StringBuilder();
 
-    public void setListaTp(Map<Integer, Teleporter> listaTp) {
+    /*public void setListaTp(Map<Integer, Teleporter> listaTp) {
         this.listaTp = listaTp;
-    }
+    }*/
 
     public String getMovimientos(char[][] mapa2d) {
-        move(vertical, horizontal, mapa2d);
+        move(mapa2d);
         return movimientos.toString();
     }
 
@@ -100,7 +101,59 @@ class Robot {
         this.horizontal = horizontal;
     }
 
-    void move(int vertical, int horizontal, char[][] mapa2d) {
+    //Pruebas
+
+
+
+    boolean canMove(char dir,char[][] mapa2d) {
+        int v = vertical;
+        int h = horizontal;
+
+        if (dir == 'S') {
+            if ((mapa2d[v + 1][h] == ' ' || mapa2d[v + 1][h] == '$' )) {
+                return true;
+            } else {return false;}
+        } else if (dir == 'E') {
+            if ((mapa2d[v + 1][h] == ' ') || (mapa2d[v + 1][h] == '$')) {
+                return true;
+            } else {return false;}
+        } else if (dir == 'N') {
+            if ((mapa2d[v + 1][h] == ' ') || (mapa2d[v + 1][h] == '$')) {
+                return true;
+            } else {return false;}
+        } else if (dir == 'W') {
+            if ((mapa2d[v + 1][h] == ' ') || (mapa2d[v + 1][h] == '$')) {
+                return true;
+            } else {return false;}
+        } else return false;
+    }
+
+
+    void move(char[][] mapa2d) {
+        char[] dir = {'S','E','N','W'};
+        char[] dirInversa = {'N','W','S','E'};
+
+
+        for (int i = 0; i < 4; i++) {
+            char c = dir[i];
+            if (canMove(dir[0],mapa2d)) {
+                movimientos.append(dir[0]);
+                vertical++;
+            }
+        }
+
+        while (mapa2d[vertical][horizontal] != '$') {
+            if (canMove(dir[0],mapa2d)) {
+                movimientos.append(dir[0]);
+                vertical++;
+            }
+        }
+    }
+
+
+
+
+    /*void move(int vertical, int horizontal, char[][] mapa2d) {
         int v = vertical;
         int h = horizontal;
         // els valors «S», «N», «W» o «E»
@@ -110,7 +163,7 @@ class Robot {
 
                 if (mapa2d[v + 1][h] != '#') {
                     //Comprueba que no hay un invesor
-                    if (mapa2d[v + 1][h] == 'I') { movimientos.append("S"); v++; count++; }
+                    if (mapa2d[v + 1][h] == 'I') { movimientos.append("S");v++;count++; }
 
                     while (mapa2d[v + 1][h] == ' ') {
                         movimientos.append("S");
@@ -119,14 +172,21 @@ class Robot {
                     }
                 } else if (mapa2d[v][h + 1] != '#') {
                     //Comprueba que no hay un invesor
-                    if (mapa2d[v][h + 1] == 'I') { movimientos.append("E"); h++; count++; }
+                    if (mapa2d[v][h + 1] == 'I') {
+                        movimientos.append("E");
+                        h++;
+                        count++;
+                    }
 
                     while (mapa2d[v][h + 1] == ' ') {
                         movimientos.append("E");
                         h++;
                         if (mapa2d[v][h + 1] == '$') { movimientos.append("E");h++;break; }
                     }
+
                 } else if (mapa2d[v - 1][h] != '#') {
+                    //Comprueba que no hay un invesor
+
                     while (mapa2d[v - 1][h] == ' ') {
                         movimientos.append("N");
                         v--;
@@ -136,7 +196,20 @@ class Robot {
                             break;
                         }
                     }
+                    if (mapa2d[v - 1][h] == 'I') {
+                        movimientos.append("N");
+                        v--;
+                        count++;
+                    }
+
                 } else if (mapa2d[v][h - 1] != '#') {
+                    //Comprueba que no hay un invesor
+                    if (mapa2d[v][h - 1] == 'I') {
+                        movimientos.append("W");
+                        h--;
+                        count++;
+                    }
+
                     while (mapa2d[v][h - 1] == ' ') {
                         movimientos.append("W");
                         h--;
@@ -147,12 +220,12 @@ class Robot {
                         }
                     }
                 }
+                // Inversor
+                //
+                //
             } else {
                 while (mapa2d[v][h] != '$') {
                     if (mapa2d[v - 1][h] != '#') {
-                        if (mapa2d[v - 1][h] == 'I') {
-                            count++;
-                        }
                         while (mapa2d[v - 1][h] == ' ' || mapa2d[v - 1][h] == 'X') {
                             movimientos.append("N");
                             v--;
@@ -162,30 +235,85 @@ class Robot {
                                 break;
                             }
                         }
+                    } else if (mapa2d[v][h - 1] != '#') {
+
+
+                        while (mapa2d[v][h - 1] == ' ') {
+                            movimientos.append("W");
+                            h--;
+                            if (mapa2d[v][h - 1] == '$') {
+                                movimientos.append("W");
+                                h--;
+                                break;
+                            }
+                            if (mapa2d[v][h - 1] == 'I') {
+                                movimientos.append("W");
+                                h--;
+                                count++;
+                            }
+                        }
+                    } else if (mapa2d[v + 1][h] != '#') {
+
+                        while (mapa2d[v + 1][h] == ' ') {
+                            movimientos.append("S");
+                            v++;
+                            if (mapa2d[v + 1][h] == '$') {
+                                movimientos.append("S");
+                                v++;
+                                break;
+                            }
+                        }
+                        //Comprueba que no hay un invesor
+                        if (mapa2d[v + 1][h] == 'I') {
+                            movimientos.append("S");
+                            v++;
+                            count++;
+                        }
+                    } else if (mapa2d[v][h + 1] != '#') {
+
+
+                        while (mapa2d[v][h + 1] == ' ') {
+                            movimientos.append("E");
+                            h++;
+                            if (mapa2d[v][h + 1] == '$') {
+                                movimientos.append("E");
+                                h++;
+                                break;
+                            }
+                        }
+                        //Comprueba que no hay un invesor
+                        if (mapa2d[v][h + 1] == 'I') {
+                            movimientos.append("E");
+                            h++;
+                            count++;
+                        }
                     }
+
+
                 }
             }
+
         }
-    }
+    }*/
 }
 
-    class Teleporter {
-            private int vertical;
-            private int horizontal;
+class Teleporter {
+    private int vertical;
+    private int horizontal;
 
-            Teleporter(int vertical, int horizontal) {
-                this.vertical = vertical;
-                this.horizontal = horizontal;
-            }
+    Teleporter(int vertical, int horizontal) {
+        this.vertical = vertical;
+        this.horizontal = horizontal;
+    }
 
-            public int getVertical() {
-                return vertical;
-            }
+    public int getVertical() {
+        return vertical;
+    }
 
-            public int getHorizontal() {
-                return horizontal;
-            }
-        }
+    public int getHorizontal() {
+        return horizontal;
+    }
+}
 
 
 
