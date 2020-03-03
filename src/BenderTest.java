@@ -40,6 +40,21 @@ public class BenderTest {
     }
 
     @Test
+    public void test0a() {
+        String mapa = "" +
+                "#######\n" +
+                "# $   #\n" +
+                "# X   #\n" +
+                "#     #\n" +
+                "#     #\n" +
+                "#     #\n" +
+                "# I   #\n" +
+                "#######";
+        Bender bender = new Bender(mapa);
+        assertEquals("SSSSNNNNN", bender.run());
+    }
+
+    @Test
     public void test02() {
         String mapa = "" +
                 "#######\n" +

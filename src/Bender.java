@@ -51,6 +51,7 @@ class Bender {
                 if (mapa.charAt(numLletra) == 'X' || mapa.charAt(numLletra) == 'x') {
                     robot.setVertical(i);
                     robot.setHorizontal(j);
+
                 }
                 // Capturamos el teleporter
                 /*if (mapa.charAt(numLletra) == 'T' || mapa.charAt(numLletra) == 't') {
@@ -103,46 +104,64 @@ class Robot {
         int v = vertical;
         int h = horizontal;
         // els valors «S», «N», «W» o «E»
-
+        int count = 0;
         while (mapa2d[v][h] != '$') {
-            if (mapa2d[v + 1][h] != '#') {
-                while (mapa2d[v + 1][h] == ' ') {
-                    movimientos.append("S");
-                    v++;
-                    if (mapa2d[v + 1][h] == '$') {
+            if (count % 2 == 0) {
+
+                if (mapa2d[v + 1][h] != '#') {
+                    //Comprueba que no hay un invesor
+                    if (mapa2d[v + 1][h] == 'I') { movimientos.append("S"); v++; count++; }
+
+                    while (mapa2d[v + 1][h] == ' ') {
                         movimientos.append("S");
                         v++;
-                        break;
+                        if (mapa2d[v + 1][h] == '$') { movimientos.append("S");v++;break; }
                     }
-                }
-            } else if (mapa2d[v][h + 1] != '#') {
-                while (mapa2d[v][h + 1] == ' ') {
-                    movimientos.append("E");
-                    h++;
-                    if (mapa2d[v][h + 1] == '$') {
+                } else if (mapa2d[v][h + 1] != '#') {
+                    //Comprueba que no hay un invesor
+                    if (mapa2d[v][h + 1] == 'I') { movimientos.append("E"); h++; count++; }
+
+                    while (mapa2d[v][h + 1] == ' ') {
                         movimientos.append("E");
                         h++;
-                        break;
+                        if (mapa2d[v][h + 1] == '$') { movimientos.append("E");h++;break; }
                     }
-                }
-            } else if (mapa2d[v - 1][h] != '#') {
-                while (mapa2d[v - 1][h] == ' ') {
-                    movimientos.append("N");
-                    v--;
-                    if (mapa2d[v - 1][h] == '$') {
+                } else if (mapa2d[v - 1][h] != '#') {
+                    while (mapa2d[v - 1][h] == ' ') {
                         movimientos.append("N");
                         v--;
-                        break;
+                        if (mapa2d[v - 1][h] == '$') {
+                            movimientos.append("N");
+                            v--;
+                            break;
+                        }
                     }
-                }
-            } else if (mapa2d[v][h - 1] != '#') {
-                while (mapa2d[v][h - 1] == ' ') {
-                    movimientos.append("W");
-                    h--;
-                    if (mapa2d[v][h - 1] == '$') {
+                } else if (mapa2d[v][h - 1] != '#') {
+                    while (mapa2d[v][h - 1] == ' ') {
                         movimientos.append("W");
                         h--;
-                        break;
+                        if (mapa2d[v][h - 1] == '$') {
+                            movimientos.append("W");
+                            h--;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                while (mapa2d[v][h] != '$') {
+                    if (mapa2d[v - 1][h] != '#') {
+                        if (mapa2d[v - 1][h] == 'I') {
+                            count++;
+                        }
+                        while (mapa2d[v - 1][h] == ' ' || mapa2d[v - 1][h] == 'X') {
+                            movimientos.append("N");
+                            v--;
+                            if (mapa2d[v - 1][h] == '$') {
+                                movimientos.append("N");
+                                v--;
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -170,11 +189,4 @@ class Robot {
 
 
 
-   /* if (mapa2d[v][h + 1] == '#') {aux++;break;}
-                    if (mapa2d[v + 1][h] == ' ' || mapa2d[v + 1][h] == '$') {
-                        while (mapa2d[v + 1][h] == ' ') {
-                            movimientos.append("S");
-                            v++;
-                            if (mapa2d[v + 1][h] == '$') { movimientos.append("S"); v++; break;}
-                        }
-                    }*/
+
