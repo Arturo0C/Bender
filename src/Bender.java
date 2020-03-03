@@ -65,7 +65,8 @@ class Bender {
 
 }
 
-// S E N O
+// S E N W
+// N W S E
 class Robot {
 
     private int vertical;
@@ -96,45 +97,40 @@ class Robot {
         int h = horizontal;
         // els valors «S», «N», «W» o «E»
 
+        int cont = 0;
         int aux = 1;
 
         while (mapa2d[v][h] != '$') {
+            if (cont == 0) {
+                aux = 1;
+            }
             switch (aux) {
                 case 1:
-                    if (mapa2d[v + 1][h] == '#') { aux++; break;}
-                    if (mapa2d[v + 1][h] == ' ' || mapa2d[v + 1][h] == '$') {
+                    if (mapa2d[v + 1][h] == '#') {cont++; aux++; break;} else {
                         movimientos.append("S");
                         v++;
-                    }
-                    if (mapa2d[v + 1][h] == 'T') {
-                        
+                        cont = 0;
                     }
                     break;
                 case 2:
-                    if (mapa2d[v][h + 1] == '#') {aux++;break;}
-                    if (mapa2d[v][h + 1] == ' ' || mapa2d[v][h + 1] == '$') {
+                    if (mapa2d[v][h + 1] == '#') {cont++;aux++;break;} else {
                         movimientos.append("E");
                         h++;
+                        cont = 0;
                     }
                     break;
                 case 3:
-                    if (mapa2d[v - 1][h] == '#') {
-                        aux++;
-                        break;
-                    }
-                    if (mapa2d[v - 1][h] == ' ' || mapa2d[v - 1][h] == '$') {
+                    if (mapa2d[v - 1][h] == '#') {cont++; aux++;break; } else {
                         movimientos.append("N");
                         v--;
+                        cont = 0;
                     }
                     break;
                 case 4:
-                    if (mapa2d[v][h - 1] == '#') {
-                        aux = 1;
-                        break;
-                    }
-                    if (mapa2d[v][h - 1] == ' ' || mapa2d[v][h - 1] == '$') {
+                    if (mapa2d[v][h - 1] == '#') {cont++; aux = 1;break; } else {
                         movimientos.append("W");
                         h--;
+                        cont = 0;
                     }
                     break;
             }
@@ -160,3 +156,13 @@ class Teleporter{
         return horizontal;
     }
 }
+
+
+   /* if (mapa2d[v][h + 1] == '#') {aux++;break;}
+                    if (mapa2d[v + 1][h] == ' ' || mapa2d[v + 1][h] == '$') {
+                        while (mapa2d[v + 1][h] == ' ') {
+                            movimientos.append("S");
+                            v++;
+                            if (mapa2d[v + 1][h] == '$') { movimientos.append("S"); v++; break;}
+                        }
+                    }*/
