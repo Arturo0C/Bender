@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 public class BenderTest {
     @Test
-    public void test01() {
+    public void test00() {
         String mapa = "" +
                 "#######\n" +
                 "# X   #\n" +
@@ -25,18 +25,18 @@ public class BenderTest {
     }
 
     @Test
-    public void test0a() {
+    public void test01() {
         String mapa = "" +
                 "#######\n" +
-                "#    $#\n" +
+                "#      #\n" +
                 "# X   #\n" +
+                "#   # #\n" +
+                "# #   #\n" +
                 "#     #\n" +
-                "#     #\n" +
-                "#     #\n" +
-                "#     #\n" +
+                "#  $  #\n" +
                 "#######";
         Bender bender = new Bender(mapa);
-        assertEquals("SSSSEEENNNN", bender.run());
+        assertEquals("SESSS", bender.run());
     }
 
     @Test

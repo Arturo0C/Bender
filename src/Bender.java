@@ -6,7 +6,7 @@ class Bender {
 
     private char[][] mapa2d;
     private Robot robot = new Robot();
-    private Map<Integer,Teleporter> listaTp = new HashMap<>();
+    /* private Map<Integer, Teleporter> listaTp = new HashMap<>();*/
 
     public Bender(String mapa) {
 
@@ -37,8 +37,13 @@ class Bender {
 
         for (int i = 0; i < vertical; i++) {
             for (int j = 0; j < horizontal + 1; j++, numLletra++) {
-                if (mapa.length() == numLletra) { break; }
-                if (mapa.charAt(numLletra) == '\n' && j != 0) { numLletra++; break; }
+                if (mapa.length() == numLletra) {
+                    break;
+                }
+                if (mapa.charAt(numLletra) == '\n' && j != 0) {
+                    numLletra++;
+                    break;
+                }
 
                 mapa2d[i][j] = mapa.charAt(numLletra);
 
@@ -48,12 +53,14 @@ class Bender {
                     robot.setHorizontal(j);
                 }
                 // Capturamos el teleporter
-                if (mapa.charAt(numLletra) == 'T' || mapa.charAt(numLletra) == 't') {
-                    listaTp.put(contadorTp, new Teleporter(i,j));
+                /*if (mapa.charAt(numLletra) == 'T' || mapa.charAt(numLletra) == 't') {
+                    listaTp.put(contadorTp, new Teleporter(i, j));
                     robot.setListaTp(listaTp);
-                }
+                }*/
             }
-            if (mapa.length() == numLletra) { break; }
+            if (mapa.length() == numLletra) {
+                break;
+            }
         }
 
     }
@@ -71,7 +78,7 @@ class Robot {
 
     private int vertical;
     private int horizontal;
-    private Map<Integer,Teleporter> listaTp;
+    private Map<Integer, Teleporter> listaTp;
 
     StringBuilder movimientos = new StringBuilder();
 
@@ -97,65 +104,70 @@ class Robot {
         int h = horizontal;
         // els valors «S», «N», «W» o «E»
 
-        int cont = 0;
-        int aux = 1;
-
         while (mapa2d[v][h] != '$') {
-            if (cont == 0) {
-                aux = 1;
-            }
-            switch (aux) {
-                case 1:
-                    if (mapa2d[v + 1][h] == '#') {cont++; aux++; break;} else {
+            if (mapa2d[v + 1][h] != '#') {
+                while (mapa2d[v + 1][h] == ' ') {
+                    movimientos.append("S");
+                    v++;
+                    if (mapa2d[v + 1][h] == '$') {
                         movimientos.append("S");
                         v++;
-                        cont = 0;
+                        break;
                     }
-                    break;
-                case 2:
-                    if (mapa2d[v][h + 1] == '#') {cont++;aux++;break;} else {
+                }
+            } else if (mapa2d[v][h + 1] != '#') {
+                while (mapa2d[v][h + 1] == ' ') {
+                    movimientos.append("E");
+                    h++;
+                    if (mapa2d[v][h + 1] == '$') {
                         movimientos.append("E");
                         h++;
-                        cont = 0;
+                        break;
                     }
-                    break;
-                case 3:
-                    if (mapa2d[v - 1][h] == '#') {cont++; aux++;break; } else {
+                }
+            } else if (mapa2d[v - 1][h] != '#') {
+                while (mapa2d[v - 1][h] == ' ') {
+                    movimientos.append("N");
+                    v--;
+                    if (mapa2d[v - 1][h] == '$') {
                         movimientos.append("N");
                         v--;
-                        cont = 0;
+                        break;
                     }
-                    break;
-                case 4:
-                    if (mapa2d[v][h - 1] == '#') {cont++; aux = 1;break; } else {
+                }
+            } else if (mapa2d[v][h - 1] != '#') {
+                while (mapa2d[v][h - 1] == ' ') {
+                    movimientos.append("W");
+                    h--;
+                    if (mapa2d[v][h - 1] == '$') {
                         movimientos.append("W");
                         h--;
-                        cont = 0;
+                        break;
                     }
-                    break;
+                }
+            }
+        }
+    }
+}
+
+    class Teleporter {
+            private int vertical;
+            private int horizontal;
+
+            Teleporter(int vertical, int horizontal) {
+                this.vertical = vertical;
+                this.horizontal = horizontal;
+            }
+
+            public int getVertical() {
+                return vertical;
+            }
+
+            public int getHorizontal() {
+                return horizontal;
             }
         }
 
-    }
-}
-
-class Teleporter{
-    private int vertical;
-    private int horizontal;
-
-    Teleporter(int vertical, int horizontal) {
-        this.vertical = vertical;
-        this.horizontal = horizontal;
-    }
-
-    public int getVertical() {
-        return vertical;
-    }
-
-    public int getHorizontal() {
-        return horizontal;
-    }
-}
 
 
    /* if (mapa2d[v][h + 1] == '#') {aux++;break;}
