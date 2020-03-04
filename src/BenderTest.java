@@ -28,7 +28,7 @@ public class BenderTest {
     public void test01() {
         String mapa = "" +
                 "#######\n" +
-                "#      #\n" +
+                "#     #\n" +
                 "# X   #\n" +
                 "#   # #\n" +
                 "# #   #\n" +
