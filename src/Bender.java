@@ -1,6 +1,3 @@
-import java.lang.reflect.Array;
-import java.util.*;
-
 class Bender {
     // Constructor: ens passen el mapa en forma d'String
 
@@ -105,14 +102,15 @@ class Robot {
 
 
 
-    boolean canMove(char dir,char[][] mapa2d) {
+
+    boolean canMove(char dir, char[][] mapa2d) {
         int v = vertical;
         int h = horizontal;
 
         if (dir == 'S') {
-            if ((mapa2d[v + 1][h] == ' ')) {
+            if ((mapa2d[v + 1][h] == ' ' || mapa2d[v + 1][h] == 'I' || mapa2d[v + 1][h] == 'X')) {
                 return true;
-            } else if (mapa2d[v + 1][h] == '$' ) {
+            } else if (mapa2d[v + 1][h] == '$') {
                 vertical++;
                 movimientos.append('S');
                 return false;
@@ -122,7 +120,7 @@ class Robot {
         } else if (dir == 'E') {
             if ((mapa2d[v][h + 1] == ' ')) {
                 return true;
-            } else if (mapa2d[v][h + 1] == '$' ) {
+            } else if (mapa2d[v][h + 1] == '$') {
                 horizontal++;
                 movimientos.append('E');
                 return false;
@@ -130,9 +128,9 @@ class Robot {
                 return false;
             }
         } else if (dir == 'N') {
-            if ((mapa2d[v - 1][h] == ' ')) {
+            if ((mapa2d[v - 1][h] == ' ') || mapa2d[v - 1][h] == 'I' || mapa2d[v - 1][h] == 'X') {
                 return true;
-            } else if (mapa2d[v - 1][h] == '$' ) {
+            } else if (mapa2d[v - 1][h] == '$') {
                 vertical--;
                 movimientos.append('N');
                 return false;
@@ -142,7 +140,7 @@ class Robot {
         } else if (dir == 'W') {
             if ((mapa2d[v][h - 1] == ' ')) {
                 return true;
-            } else if (mapa2d[v][h - 1] == '$' ) {
+            } else if (mapa2d[v][h - 1] == '$') {
                 horizontal--;
                 movimientos.append('W');
                 return false;
@@ -154,187 +152,79 @@ class Robot {
 
 
     void move(char[][] mapa2d) {
-        char[] dir = {'S','E','N','W'};
-        char[] dirInversa = {'N','W','S','E'};
-
+        char[] dir = {'S', 'E', 'N', 'W'};
+        char[] dirInversa = {'N', 'W', 'S', 'E'};
         char myMove = ' ';
+
+        int esInversa = 0;
 
         myMove = dir[0];
 
         while (mapa2d[vertical][horizontal] != '$') {
-                if (canMove(myMove,mapa2d)) {
-                    while (canMove(myMove,mapa2d)) {
-                        movimientos.append(myMove);
-                        tipoMovi(myMove);
-                    }
-                } else {
-                    for (int i = 0; i < 4; i++) {
-                        if (canMove(dir[i],mapa2d)) {
-                            myMove = dir[i];
-                            break;
-                        }
-                    }
-                }
-
-           }
-    }
-
-    void tipoMovi(char dir) {
-        if (dir == 'S') {
-            vertical++;
-        }  else if (dir == 'E') {
-            horizontal++;
-        }  else if (dir == 'N') {
-            vertical--;
-        }  else if (dir == 'W') {
-            horizontal--;
-        }
-    }
-
-
-
-    /*void move(int vertical, int horizontal, char[][] mapa2d) {
-        int v = vertical;
-        int h = horizontal;
-        // els valors «S», «N», «W» o «E»
-        int count = 0;
-        while (mapa2d[v][h] != '$') {
-            if (count % 2 == 0) {
-
-                if (mapa2d[v + 1][h] != '#') {
-                    //Comprueba que no hay un invesor
-                    if (mapa2d[v + 1][h] == 'I') { movimientos.append("S");v++;count++; }
-
-                    while (mapa2d[v + 1][h] == ' ') {
-                        movimientos.append("S");
-                        v++;
-                        if (mapa2d[v + 1][h] == '$') { movimientos.append("S");v++;break; }
-                    }
-                } else if (mapa2d[v][h + 1] != '#') {
-                    //Comprueba que no hay un invesor
-                    if (mapa2d[v][h + 1] == 'I') {
-                        movimientos.append("E");
-                        h++;
-                        count++;
-                    }
-
-                    while (mapa2d[v][h + 1] == ' ') {
-                        movimientos.append("E");
-                        h++;
-                        if (mapa2d[v][h + 1] == '$') { movimientos.append("E");h++;break; }
-                    }
-
-                } else if (mapa2d[v - 1][h] != '#') {
-                    //Comprueba que no hay un invesor
-
-                    while (mapa2d[v - 1][h] == ' ') {
-                        movimientos.append("N");
-                        v--;
-                        if (mapa2d[v - 1][h] == '$') {
-                            movimientos.append("N");
-                            v--;
-                            break;
-                        }
-                    }
-                    if (mapa2d[v - 1][h] == 'I') {
-                        movimientos.append("N");
-                        v--;
-                        count++;
-                    }
-
-                } else if (mapa2d[v][h - 1] != '#') {
-                    //Comprueba que no hay un invesor
-                    if (mapa2d[v][h - 1] == 'I') {
-                        movimientos.append("W");
-                        h--;
-                        count++;
-                    }
-
-                    while (mapa2d[v][h - 1] == ' ') {
-                        movimientos.append("W");
-                        h--;
-                        if (mapa2d[v][h - 1] == '$') {
-                            movimientos.append("W");
-                            h--;
-                            break;
-                        }
-                    }
-                }
-                // Inversor
-                //
-                //
+            if (canMove(myMove, mapa2d)) {
+                    movimientos.append(myMove);
+                    tipoMovi(myMove);
+                if (mapa2d[vertical][horizontal] == 'I') {myMove = dirInversa[0]; esInversa++; }
             } else {
-                while (mapa2d[v][h] != '$') {
-                    if (mapa2d[v - 1][h] != '#') {
-                        while (mapa2d[v - 1][h] == ' ' || mapa2d[v - 1][h] == 'X') {
-                            movimientos.append("N");
-                            v--;
-                            if (mapa2d[v - 1][h] == '$') {
-                                movimientos.append("N");
-                                v--;
-                                break;
-                            }
-                        }
-                    } else if (mapa2d[v][h - 1] != '#') {
-
-
-                        while (mapa2d[v][h - 1] == ' ') {
-                            movimientos.append("W");
-                            h--;
-                            if (mapa2d[v][h - 1] == '$') {
-                                movimientos.append("W");
-                                h--;
-                                break;
-                            }
-                            if (mapa2d[v][h - 1] == 'I') {
-                                movimientos.append("W");
-                                h--;
-                                count++;
-                            }
-                        }
-                    } else if (mapa2d[v + 1][h] != '#') {
-
-                        while (mapa2d[v + 1][h] == ' ') {
-                            movimientos.append("S");
-                            v++;
-                            if (mapa2d[v + 1][h] == '$') {
-                                movimientos.append("S");
-                                v++;
-                                break;
-                            }
-                        }
-                        //Comprueba que no hay un invesor
-                        if (mapa2d[v + 1][h] == 'I') {
-                            movimientos.append("S");
-                            v++;
-                            count++;
-                        }
-                    } else if (mapa2d[v][h + 1] != '#') {
-
-
-                        while (mapa2d[v][h + 1] == ' ') {
-                            movimientos.append("E");
-                            h++;
-                            if (mapa2d[v][h + 1] == '$') {
-                                movimientos.append("E");
-                                h++;
-                                break;
-                            }
-                        }
-                        //Comprueba que no hay un invesor
-                        if (mapa2d[v][h + 1] == 'I') {
-                            movimientos.append("E");
-                            h++;
-                            count++;
-                        }
-                    }
-
-
+                for (int i = 0; i < 4; i++) {
+                   if (esInversa%2 == 0) {
+                       if (canMove(dir[i], mapa2d)) {
+                           myMove = dir[i];
+                           break;
+                       }
+                   } else {
+                       if (canMove(dirInversa[i], mapa2d)) {
+                           myMove = dirInversa[i];
+                           break;
+                       }
+                   }
                 }
             }
 
         }
-    }*/
+    }
+
+    boolean Inversor(char dir, char[][] mapa2d) {
+        if (dir == 'S') {
+            if ((mapa2d[vertical + 1][horizontal] == 'I')) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (dir == 'E') {
+            if ((mapa2d[vertical][horizontal + 1] == 'I')) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (dir == 'N') {
+            if ((mapa2d[vertical - 1][horizontal] == 'I')) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (dir == 'W') {
+            if ((mapa2d[vertical][horizontal - 1] == ' ')) {
+                return true;
+            } else {
+                return false;
+            }
+        } else return false;
+    }
+
+
+    void tipoMovi(char dir) {
+        if (dir == 'S') {
+            vertical++;
+        } else if (dir == 'E') {
+            horizontal++;
+        } else if (dir == 'N') {
+            vertical--;
+        } else if (dir == 'W') {
+            horizontal--;
+        }
+    }
+
 }
 
 class Teleporter {
