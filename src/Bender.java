@@ -83,7 +83,7 @@ class Robot {
 
     /*public void setListaTp(Map<Integer, Teleporter> listaTp) {
         this.listaTp = listaTp;
-    }*/
+     }*/
 
     public String getMovimientos(char[][] mapa2d) {
         move(mapa2d);
@@ -99,8 +99,6 @@ class Robot {
     }
 
     //Pruebas
-
-
 
 
     boolean canMove(char dir, char[][] mapa2d) {
@@ -150,7 +148,6 @@ class Robot {
         } else return false;
     }
 
-
     void move(char[][] mapa2d) {
         char[] dir = {'S', 'E', 'N', 'W'};
         char[] dirInversa = {'N', 'W', 'S', 'E'};
@@ -183,35 +180,6 @@ class Robot {
 
         }
     }
-
-    boolean Inversor(char dir, char[][] mapa2d) {
-        if (dir == 'S') {
-            if ((mapa2d[vertical + 1][horizontal] == 'I')) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (dir == 'E') {
-            if ((mapa2d[vertical][horizontal + 1] == 'I')) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (dir == 'N') {
-            if ((mapa2d[vertical - 1][horizontal] == 'I')) {
-                return true;
-            } else {
-                return false;
-            }
-        } else if (dir == 'W') {
-            if ((mapa2d[vertical][horizontal - 1] == ' ')) {
-                return true;
-            } else {
-                return false;
-            }
-        } else return false;
-    }
-
 
     void tipoMovi(char dir) {
         if (dir == 'S') {
