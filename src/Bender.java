@@ -1,11 +1,18 @@
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
 class Bender {
     // Constructor: ens passen el mapa en forma d'String
 
     private char[][] mapa2d;
     private Robot robot = new Robot();
     /* private Map<Integer, Teleporter> listaTp = new HashMap<>();*/
+    private Teleporter teleporter = new Teleporter();
 
-    public Bender(String mapa) {
+    //El string del mapa can't be null
+    public Bender(@NotNull String mapa) {
 
         int horizontal = 0;
         int vertical = 1;
@@ -51,10 +58,9 @@ class Bender {
 
                 }
                 // Capturamos el teleporter
-                /*if (mapa.charAt(numLletra) == 'T' || mapa.charAt(numLletra) == 't') {
-                    listaTp.put(contadorTp, new Teleporter(i, j));
-                    robot.setListaTp(listaTp);
-                }*/
+                if (mapa.charAt(numLletra) == 'T' || mapa.charAt(numLletra) == 't') {
+                        teleporter.setTp(new Teleporter(i,j));
+                }
             }
             if (mapa.length() == numLletra) {
                 break;
@@ -70,20 +76,12 @@ class Bender {
 
 }
 
-// S E N W
-// N W S E
 class Robot {
 
     private int vertical;
     private int horizontal;
 
-    /*private Map<Integer, Teleporter> listaTp;*/
-
     StringBuilder movimientos = new StringBuilder();
-
-    /*public void setListaTp(Map<Integer, Teleporter> listaTp) {
-        this.listaTp = listaTp;
-     }*/
 
     public String getMovimientos(char[][] mapa2d) {
         move(mapa2d);
@@ -98,15 +96,12 @@ class Robot {
         this.horizontal = horizontal;
     }
 
-    //Pruebas
-
-
     boolean canMove(char dir, char[][] mapa2d) {
         int v = vertical;
         int h = horizontal;
 
         if (dir == 'S') {
-            if ((mapa2d[v + 1][h] == ' ' || mapa2d[v + 1][h] == 'I' || mapa2d[v + 1][h] == 'X')) {
+            if ((mapa2d[v + 1][h] != '#')) {
                 return true;
             } else if (mapa2d[v + 1][h] == '$') {
                 vertical++;
@@ -116,7 +111,7 @@ class Robot {
                 return false;
             }
         } else if (dir == 'E') {
-            if ((mapa2d[v][h + 1] == ' ')) {
+            if ((mapa2d[v][h + 1] != '#')) {
                 return true;
             } else if (mapa2d[v][h + 1] == '$') {
                 horizontal++;
@@ -126,7 +121,7 @@ class Robot {
                 return false;
             }
         } else if (dir == 'N') {
-            if ((mapa2d[v - 1][h] == ' ') || mapa2d[v - 1][h] == 'I' || mapa2d[v - 1][h] == 'X') {
+            if ((mapa2d[v - 1][h] != '#')) {
                 return true;
             } else if (mapa2d[v - 1][h] == '$') {
                 vertical--;
@@ -136,7 +131,7 @@ class Robot {
                 return false;
             }
         } else if (dir == 'W') {
-            if ((mapa2d[v][h - 1] == ' ')) {
+            if ((mapa2d[v][h - 1] != '#')) {
                 return true;
             } else if (mapa2d[v][h - 1] == '$') {
                 horizontal--;
@@ -196,12 +191,26 @@ class Robot {
 }
 
 class Teleporter {
+    List<Teleporter> tp = new ArrayList<>();
+
     private int vertical;
     private int horizontal;
+
+    Teleporter() {
+
+    }
 
     Teleporter(int vertical, int horizontal) {
         this.vertical = vertical;
         this.horizontal = horizontal;
+    }
+
+    public List<Teleporter> getTp() {
+        return tp;
+    }
+
+    public void setTp(Teleporter tp) {
+        this.tp.add(tp);
     }
 
     public int getVertical() {
@@ -211,6 +220,8 @@ class Teleporter {
     public int getHorizontal() {
         return horizontal;
     }
+
+
 }
 
 
