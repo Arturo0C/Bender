@@ -51,12 +51,12 @@ class Bender {
 
                 // Capturamos el robot
                 if (mapa.charAt(numLletra) == 'X' || mapa.charAt(numLletra) == 'x') {
-                    robot.setVector(i, j);
+                    robot.setVector(i,j);
                 }
                 // Capturamos el teleporter
                 if (mapa.charAt(numLletra) == 'T' || mapa.charAt(numLletra) == 't') {
-                    teleporter.setTpList(contadorTp, new Teleporter(i, j));
-                    contadorTp++;
+                        teleporter.setTpList(contadorTp,new Teleporter(i,j));
+                        contadorTp++;
                 }
             }
             if (mapa.length() == numLletra) {
@@ -69,6 +69,12 @@ class Bender {
     public Teleporter getTeleporter() {
         return teleporter;
     }
+
+    public String run() {
+        return robot.getMovimientos(mapa2d,teleporter);
+    }
+
+
 }
 
 class Robot {
