@@ -1,14 +1,12 @@
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 class Bender {
     // Constructor: ens passen el mapa en forma d'String
 
     private char[][] mapa2d;
     private Robot robot = new Robot();
-    /* private Map<Integer, Teleporter> listaTp = new HashMap<>();*/
     private Teleporter teleporter = new Teleporter();
 
     //El string del mapa can't be null
@@ -53,13 +51,12 @@ class Bender {
 
                 // Capturamos el robot
                 if (mapa.charAt(numLletra) == 'X' || mapa.charAt(numLletra) == 'x') {
-                    robot.setVertical(i);
-                    robot.setHorizontal(j);
-
+                    robot.setVector(i,j);
                 }
                 // Capturamos el teleporter
                 if (mapa.charAt(numLletra) == 'T' || mapa.charAt(numLletra) == 't') {
-                        teleporter.setTp(new Teleporter(i,j));
+                        teleporter.setTpList(contadorTp,new Teleporter(i,j));
+                        contadorTp++;
                 }
             }
             if (mapa.length() == numLletra) {
@@ -70,9 +67,8 @@ class Bender {
     }
 
     public String run() {
-        return robot.getMovimientos(mapa2d);
+        return robot.getMovimientos(mapa2d,teleporter);
     }
-
 
 }
 
@@ -83,20 +79,21 @@ class Robot {
 
     StringBuilder movimientos = new StringBuilder();
 
-    public String getMovimientos(char[][] mapa2d) {
-        move(mapa2d);
+    public String getMovimientos(char[][] mapa2d, Teleporter teleporter) {
+        move(mapa2d,teleporter);
         return movimientos.toString();
     }
 
-    public void setVertical(int vertical) {
+    public void setVector(int vertical, int horizontal) {
         this.vertical = vertical;
-    }
-
-    public void setHorizontal(int horizontal) {
         this.horizontal = horizontal;
     }
 
-    boolean canMove(char dir, char[][] mapa2d) {
+    public int getHorizontal() {
+        return horizontal;
+    }
+
+    boolean canMove(char dir, char[][] mapa2d, Teleporter teleporter) {
         int v = vertical;
         int h = horizontal;
 
@@ -143,7 +140,7 @@ class Robot {
         } else return false;
     }
 
-    void move(char[][] mapa2d) {
+    void move(char[][] mapa2d, Teleporter teleporter) {
         char[] dir = {'S', 'E', 'N', 'W'};
         char[] dirInversa = {'N', 'W', 'S', 'E'};
         char myMove = ' ';
@@ -153,19 +150,27 @@ class Robot {
         myMove = dir[0];
 
         while (mapa2d[vertical][horizontal] != '$') {
-            if (canMove(myMove, mapa2d)) {
+
+            if (mapa2d[vertical][horizontal] == 'T') {
+                char[] c = teleporter.nextTp();
+                vertical = c[0];
+                horizontal = c[1];
+            }
+
+
+            if (canMove(myMove, mapa2d, teleporter)) {
                     movimientos.append(myMove);
-                    tipoMovi(myMove);
+                    typeMove(myMove);
                 if (mapa2d[vertical][horizontal] == 'I') {myMove = dirInversa[0]; esInversa++; }
             } else {
                 for (int i = 0; i < 4; i++) {
                    if (esInversa%2 == 0) {
-                       if (canMove(dir[i], mapa2d)) {
+                       if (canMove(dir[i], mapa2d, teleporter)) {
                            myMove = dir[i];
                            break;
                        }
                    } else {
-                       if (canMove(dirInversa[i], mapa2d)) {
+                       if (canMove(dirInversa[i], mapa2d, teleporter)) {
                            myMove = dirInversa[i];
                            break;
                        }
@@ -176,7 +181,7 @@ class Robot {
         }
     }
 
-    void tipoMovi(char dir) {
+    void typeMove(char dir) {
         if (dir == 'S') {
             vertical++;
         } else if (dir == 'E') {
@@ -191,26 +196,68 @@ class Robot {
 }
 
 class Teleporter {
-    List<Teleporter> tp = new ArrayList<>();
+
+    private Map<Integer, Teleporter> tpList = new HashMap<>();
 
     private int vertical;
     private int horizontal;
 
-    Teleporter() {
-
-    }
+    Teleporter() {}
 
     Teleporter(int vertical, int horizontal) {
         this.vertical = vertical;
         this.horizontal = horizontal;
     }
 
-    public List<Teleporter> getTp() {
-        return tp;
+
+    public char[] nextTp() {
+        char[] resultado = new char[2];
+        Map<Double, Teleporter> tpDistances = new HashMap<>();
+        Teleporter tp1 = new Teleporter(vertical,horizontal);
+        double aux;
+        double auxFinal = 0;
+
+        // En caso de tener solo dos tp's
+        if (tpList.size() == 2) {
+            for (Teleporter i: tpList.values()) {
+                if (!(equals(tp1,i))) {
+                    horizontal = (char) i.getVertical();
+                    vertical = (char) i.getHorizontal();
+                }
+            }
+        } else {
+            for (Teleporter i: tpList.values()) {
+                if (!(equals(tp1,i))) {
+                    tpDistances.put(distanceVector(tp1,i),i);
+                }
+            }
+        }
+
+
+        return resultado;
     }
 
-    public void setTp(Teleporter tp) {
-        this.tp.add(tp);
+    public double distanceVector(Teleporter tp, Teleporter tp2) {
+        int v1 = tp.getVertical();
+        int h1 = tp.getHorizontal();
+        int v2 = tp2.getVertical();
+        int h2 = tp2.getHorizontal();
+
+        return Math.sqrt(Math.pow(v2-v1,2) + Math.pow(h2-h1,2));
+
+    }
+
+
+    public boolean equals(Teleporter tp,Teleporter tp2){
+        return tp.getHorizontal() == tp2.getHorizontal() && tp.getVertical() == tp2.getVertical();
+    }
+
+    public Map<Integer, Teleporter> getTpList() {
+        return tpList;
+    }
+
+    public void setTpList(int i, Teleporter Teleporter) {
+        this.tpList.put(i, Teleporter);
     }
 
     public int getVertical() {
@@ -220,8 +267,6 @@ class Teleporter {
     public int getHorizontal() {
         return horizontal;
     }
-
-
 }
 
 
