@@ -51,12 +51,12 @@ class Bender {
 
                 // Capturamos el robot
                 if (mapa.charAt(numLletra) == 'X' || mapa.charAt(numLletra) == 'x') {
-                    robot.setVector(i,j);
+                    robot.setVector(i, j);
                 }
                 // Capturamos el teleporter
                 if (mapa.charAt(numLletra) == 'T' || mapa.charAt(numLletra) == 't') {
-                        teleporter.setTpList(contadorTp,new Teleporter(i,j));
-                        contadorTp++;
+                    teleporter.setTpList(contadorTp, new Teleporter(i, j));
+                    contadorTp++;
                 }
             }
             if (mapa.length() == numLletra) {
@@ -66,10 +66,9 @@ class Bender {
 
     }
 
-    public String run() {
-        return robot.getMovimientos(mapa2d,teleporter);
+    public Teleporter getTeleporter() {
+        return teleporter;
     }
-
 }
 
 class Robot {
@@ -91,6 +90,10 @@ class Robot {
 
     public int getHorizontal() {
         return horizontal;
+    }
+
+    public int getVertical() {
+        return vertical;
     }
 
     boolean canMove(char dir, char[][] mapa2d, Teleporter teleporter) {
@@ -152,16 +155,17 @@ class Robot {
         while (mapa2d[vertical][horizontal] != '$') {
 
             if (mapa2d[vertical][horizontal] == 'T') {
-                char[] c = teleporter.nextTp();
+                char[] c = teleporter.nextTp(vertical,horizontal);
                 vertical = c[0];
                 horizontal = c[1];
             }
-
-
+            if (mapa2d[vertical][horizontal] == 'I') {myMove = dirInversa[0]; esInversa++; }
             if (canMove(myMove, mapa2d, teleporter)) {
                     movimientos.append(myMove);
                     typeMove(myMove);
-                if (mapa2d[vertical][horizontal] == 'I') {myMove = dirInversa[0]; esInversa++; }
+
+
+
             } else {
                 for (int i = 0; i < 4; i++) {
                    if (esInversa%2 == 0) {
@@ -209,25 +213,30 @@ class Teleporter {
         this.horizontal = horizontal;
     }
 
+    public void setTpList(Map<Integer, Teleporter> tpList) {
+        this.tpList = tpList;
+    }
 
-    public char[] nextTp() {
+    public char[] nextTp(int vertical,int horizontal) {
         char[] resultado = new char[2];
         Map<Double, Teleporter> tpDistances = new HashMap<>();
         Teleporter tp1 = new Teleporter(vertical,horizontal);
-        double aux;
-        double auxFinal = 0;
+        Teleporter tp2;
 
         // En caso de tener solo dos tp's
         if (tpList.size() == 2) {
             for (Teleporter i: tpList.values()) {
+
                 if (!(equals(tp1,i))) {
-                    horizontal = (char) i.getVertical();
-                    vertical = (char) i.getHorizontal();
+                    resultado[0] = (char) i.getVertical();
+                    resultado[1] = (char) i.getHorizontal();
                 }
+
             }
         } else {
             for (Teleporter i: tpList.values()) {
-                if (!(equals(tp1,i))) {
+                tp2 = i;
+                if (!(equals(tp1,tp2))) {
                     tpDistances.put(distanceVector(tp1,i),i);
                 }
             }
@@ -249,7 +258,11 @@ class Teleporter {
 
 
     public boolean equals(Teleporter tp,Teleporter tp2){
-        return tp.getHorizontal() == tp2.getHorizontal() && tp.getVertical() == tp2.getVertical();
+        if (tp.getHorizontal() == tp2.getHorizontal() && tp.getVertical() == tp2.getVertical()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public Map<Integer, Teleporter> getTpList() {
