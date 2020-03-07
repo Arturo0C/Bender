@@ -94,13 +94,6 @@ class Robot {
         this.horizontal = horizontal;
     }
 
-    public int getHorizontal() {
-        return horizontal;
-    }
-
-    public int getVertical() {
-        return vertical;
-    }
 
     boolean canMove(char dir, char[][] mapa2d, Teleporter teleporter) {
         int v = vertical;
@@ -165,12 +158,12 @@ class Robot {
                 vertical = c[0];
                 horizontal = c[1];
             }
-            if (mapa2d[vertical][horizontal] == 'I') {myMove = dirInversa[0]; esInversa++; }
+
             if (canMove(myMove, mapa2d, teleporter)) {
                     movimientos.append(myMove);
                     typeMove(myMove);
 
-
+                if (mapa2d[vertical][horizontal] == 'I') { esInversa++; }
 
             } else {
                 for (int i = 0; i < 4; i++) {
